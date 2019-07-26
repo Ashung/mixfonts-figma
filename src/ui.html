@@ -1,0 +1,42 @@
+<div id="list">
+    <div class="toolbar">
+        <select name="group" id="group" class="select-menu">
+        </select>
+        <div title="Import Rules" id="importRules" class="icon icon--import icon--button"></div>
+        <div title="Add Rule" id="addRule" class="icon icon--add icon--button"></div>
+    </div>
+    <div class="rules" id="rules">
+    </div>
+</div>
+<div id="form" class="form" style="display: none;">
+    <div class="form__body">
+        <div class="form__row">
+            <label class="label" for="ruleGroup">Group</label>
+        </div>
+        <div class="form__row">
+            <input id="ruleGroup" type="input" class="input" placeholder="Value" value="Default" maxlength="30"/>
+        </div>
+        <div class="form__row">
+            <label class="label" for="ruleLatinFontFamily">Latin Text</label>
+        </div>
+        <div class="form__row">
+            <select name="ruleLatinFontFamily" id="ruleLatinFontFamily" class="select-menu">
+            </select>
+            <select name="ruleLatinFontStyle" id="ruleLatinFontStyle" class="select-menu">
+            </select>
+        </div>
+        <div class="form__row">
+            <label class="label" for="ruleCJKFontFamily">CJK Text</label>
+        </div>
+        <div class="form__row">
+            <select name="ruleCJKFontFamily" id="ruleCJKFontFamily" class="select-menu">
+            </select>
+            <select name="ruleCJKFontStyle" id="ruleCJKFontStyle" class="select-menu">
+            </select>
+        </div>
+    </div>
+    <div class="form__foot">
+        <button id="saveButton" class='button button--primary'>Save</button>
+        <button id="cancelButton" class='button button--secondary'>Cancel</button>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+@import "./scss/base";
+@import "./scss/typography";
+@import "./scss/variables";
+@import "./scss/mixins";
+
+//Components
+@import "./scss/components/icon";
+@import "./scss/components/label";
+@import "./scss/components/type";
+@import "./scss/components/button";
+@import "./scss/components/input";
+
+body {
+    margin: 0;
+}
+
+// Toolbar
+.toolbar {
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    .select-menu {
+        flex: auto;
+        width: auto;
+    }
+}
+
+.icon {
+    &--add {
+        background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M15 15v-5h1v5h5v1h-5v5h-1v-5h-5v-1h5z' fill-opacity='.8'/%3E%3C/svg%3E");
+    }
+    &--import {
+        background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M15.5 9v10.5m0 0L12 16m3.5 3.5L19 16m-9.5 3v3.5h12V19' stroke='%23000' fill='none'/%3E%3C/svg%3E");
+    }
+    &--remove {
+        background-image: url("data:image/svg+xml;utf8,%3Csvg width='32' height='32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 16H10v-1h11v1z' fill-opacity='.8'/%3E%3C/svg%3E")
+    }
+}
+
+// Rules
+#list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+#rules {
+    flex: auto;
+    overflow: auto;
+}
+.rule {
+    display: flex;
+    padding-left: 16px;
+    padding-right: 8px;
+    height: 32px;
+    line-height: 32px;
+    &:hover {
+        background: $figma-selection-a;
+    }
+    .rule__preview {
+        flex: auto;
+        font-size: $font-size-xlarge;
+        user-select: none;
+        cursor: default;
+    }
+}
+
+.empty {
+    padding: 16px;
+    text-align: center;
+}
+
+// Form
+.form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .form__body {
+        flex: auto;
+        padding: 8px;
+        .form__row {
+            height: 32px;
+            display: flex;
+            .select-menu {
+                flex: 0 0 60%;
+                & + .select-menu {
+                    flex: 0 0 40%;
+                }
+            }
+        }
+    }
+    .form__foot {
+        padding: 8px 16px;
+        display: flex;
+        flex-direction: row-reverse;
+        .button + .button {
+            margin-right: 8px;
+        }
+    }
+}
+
+.select-menu {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 32px;
+    padding: 8px;
+    cursor: default;
+    color: $figma-black-8;
+    border: 1px solid transparent;
+    border-radius: $border-radius-small;
+    background-color: $figma-white;
+    @include font-ui-pos("small", "normal");
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20fill%3D%22none%22%20height%3D%2230%22%20viewBox%3D%220%200%2030%2030%22%20width%3D%2230%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20clip-rule%3D%22evenodd%22%20d%3D%22m15%2016.7071-3-3%20.7071-.7071%202.6465%202.6464%202.6464-2.6464.7071.7071-3%203-.3535.3536z%22%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    &:hover {
+        border: 1px solid $figma-black-1;
+    }
+    &:focus, &:active {
+        padding: 7px;
+        border: 2px solid $figma-blue;
+        outline: none;
+        background-position: calc(100% + 1px) 50%;
+    }
+}
+
+.toast {
+    @include font-ui-pos("xlarge", "normal");
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+	padding: 8px 16px;
+    border: 1px solid $figma-black-1;
+    border-radius: $border-radius-med;
+    background-color: $figma-hud;
+    box-shadow: $shadow-hud;
+    color: $figma-white;
+    transition: all 0.2s ease-out;
+    &--error {
+        border: 1px solid $figma-red;
+        background-color: $figma-red;
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "MixFonts",
+  "id": "735711462872799891",
+  "api": "0.6.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}

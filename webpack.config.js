@@ -13,35 +13,16 @@ module.exports = (env, argv) => ({
 
     module: {
         rules: [
-            // Converts TypeScript code to JavaScript
-            // {
-            //     test: /\.tsx?$/,
-            //     use: 'ts-loader',
-            //     exclude: /node_modules/
-            // },
-
             // Enables including CSS by doing "import './file.css'" in your TypeScript code
             {
                 test: /\.scss$/,
                 use: [ 'style-loader', 'css-loader', 'sass-loader' ]
-            },
-
-            // {
-            //     test: /\.scripts\.min\.js$/,
-            //     use: [ 'script-loader' ]
-            // },
-
-            // Allows you to use "<%= require('./file.svg') %>" in your HTML code to get a data URI
-            {
-                test: /\.(png|jpg|gif|webp|svg)$/,
-                use: 'url-loader'
-            },
+            }
         ],
     },
 
     resolve: {
-        extensions: [ '.js' ],
-        alias: { vue: 'vue/dist/vue.esm.browser.min.js' }
+        extensions: [ '.js' ]
     },
 
     output: {

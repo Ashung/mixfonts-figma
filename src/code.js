@@ -24,8 +24,10 @@ async function initData() {
     // [{family:string, styles:[string]}]
     let fontList = []
     let fontNames = []
+    let availableFontNames = [];
     const availableFonts = await figma.listAvailableFontsAsync()
     for (let font of availableFonts) {
+        availableFontNames.push(font.fontName.family + ' ' + font.fontName.style)
         if (fontNames.includes(font.fontName.family)) {
             const index = fontNames.indexOf(font.fontName.family)
             fontList[index].styles.push(font.fontName.style)
@@ -38,7 +40,7 @@ async function initData() {
         }
     }
 
-    return {mixFontGroups, mixFontCurrentGroup, mixFontRules, availableFonts, fontList}
+    return {mixFontGroups, mixFontCurrentGroup, mixFontRules, availableFontNames, fontList}
 }
 
 initData().then(data => {
@@ -59,7 +61,6 @@ initData().then(data => {
             const tasks = Object.keys(messageData).map(key => figma.clientStorage.setAsync(key, messageData[key]))
             Promise.all(tasks)
             // console.log('save ' + Object.keys(messageData).join(','))
-
         }
         // pluginMessage.data: [{family, style}]
         if (pluginMessage.type === 'changeFont') {
@@ -72,11 +73,11 @@ initData().then(data => {
                 })
             } else {
                 // Change font
-                const availableFonts = data.availableFonts
                 let missedFonts = []
                 fonts.forEach(font => {
-                    if (!availableFonts.some(item => item.fontName.family === font.family && item.fontName.style === font.style)) {
-                        missedFonts.push(`${font.family} ${font.style}`)
+                    const fullName = font.family + ' ' + font.style
+                    if (!data.availableFontNames.includes(fullName)) {
+                        missedFonts.push(fullName)
                     }
                 })
                 if (missedFonts.length > 0) {
@@ -92,7 +93,7 @@ initData().then(data => {
                         selectedTextLayers.forEach(layer => {
                             const text = layer.characters
                             // Change CJK font
-                            layer.setRangeFontName(0, text.length, fonts[1])
+                            layer.fontName = fonts[1]
                             // Change Latin font
                             let match
                             while (match = regexLatin.exec(text)) {

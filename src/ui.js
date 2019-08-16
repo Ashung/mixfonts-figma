@@ -6,6 +6,7 @@ window.onmessage = (event) => {
 
     if (pluginMessage.type === 'initData') {
         let {mixFontGroups, mixFontCurrentGroup, mixFontRules, fontList} = pluginMessage.data
+        let currentEditedRuleId = document.getElementById('currentEditedRuleId')
 
         const elemGroup = document.getElementById('group')
         const elemRulesContainer = document.getElementById('rules')
@@ -62,7 +63,7 @@ window.onmessage = (event) => {
         // Save
         const elemSaveButton = document.getElementById('saveButton')
         elemSaveButton.onclick = function() {
-            const id = generateHashID()
+
             const group = elemGroupTitle.value
             let fonts = []
             fonts.push({
@@ -78,7 +79,17 @@ window.onmessage = (event) => {
             }
             mixFontGroups.sort()
             mixFontCurrentGroup = group
-            mixFontRules.push({id, group, fonts})
+            
+            if (currentEditedRuleId.value !== '') {
+                const currentRuleIndex = mixFontRules.findIndex(rule => rule.id === currentEditedRuleId.value)
+                mixFontRules[currentRuleIndex].group = group
+                mixFontRules[currentRuleIndex].fonts = fonts
+                currentEditedRuleId.value = ''
+            } else {
+                const id = generateHashID()
+                mixFontRules.push({id, group, fonts})
+            }
+
             elemList.style.left = '0'
             elemForm.style.left = '100%'
 
@@ -191,7 +202,9 @@ window.onmessage = (event) => {
                     const elemRule = createRuleBlock(rule)
                     elemRulesContainer.appendChild(elemRule)
                 })
-                const removeRuleButtons = elemRulesContainer.querySelectorAll('a.icon')
+
+                // Remove
+                const removeRuleButtons = elemRulesContainer.querySelectorAll('a.icon--remove')
                 removeRuleButtons.forEach(button => {
                     button.onclick = function() {
                         const ruleBlock = this.parentNode
@@ -213,6 +226,27 @@ window.onmessage = (event) => {
                         window.parent.postMessage({pluginMessage}, '*')
                     }
                 })
+
+                // Edit
+                const editRuleButtons = elemRulesContainer.querySelectorAll('a.icon--edit')
+                editRuleButtons.forEach(button => {
+                    button.onclick = function() {
+                        const ruleId = this.getAttribute('rule-id')
+                        const currentRule = mixFontRules.find(rule => rule.id === ruleId)
+                        currentEditedRuleId.value = ruleId
+
+                        elemList.style.left = '-100%'
+                        elemForm.style.left = '0'
+                        elemGroupTitle.value = mixFontCurrentGroup
+
+                        elemLatinTextFamily.value = fontFamilyNames.indexOf(currentRule.fonts[0].family)
+                        setOptionsToSelect(fontList[elemLatinTextFamily.value].styles, elemLatinTextStyle)
+                        elemLatinTextStyle.value = fontList[elemLatinTextFamily.value].styles.indexOf(currentRule.fonts[0].style)
+                        elemCJKTextFamily.value = fontFamilyNames.indexOf(currentRule.fonts[1].family)
+                        setOptionsToSelect(fontList[elemCJKTextFamily.value].styles, elemCJKTextStyle)
+                        elemCJKTextStyle .value = fontList[elemCJKTextFamily.value].styles.indexOf(currentRule.fonts[1].style)
+                    }
+                })
             }
         }
 
@@ -227,9 +261,12 @@ window.onmessage = (event) => {
 function createRuleBlock(rule) {
     const elemRule = document.createElement('div');
     elemRule.className = 'rule'
+
     const elemRulePreview = document.createElement('div')
     elemRulePreview.className = 'rule__preview'
-    elemRulePreview.title = `${rule.fonts[0].family} ${rule.fonts[0].style}, ${rule.fonts[1].family} ${rule.fonts[1].style}`
+    const elemRuleThumb = document.createElement('div')
+    elemRuleThumb.className = 'rule__thumb'
+
     const elemCJKText = document.createElement('span')
     elemCJKText.textContent = '漢字 かんじ 한자 '
     elemCJKText.style.fontFamily = rule.fonts[1].family
@@ -240,8 +277,14 @@ function createRuleBlock(rule) {
     elemLatinText.style.fontFamily = rule.fonts[0].family
     applyFontStyleToElement(rule.fonts[0].style, elemLatinText)
 
-    elemRulePreview.appendChild(elemCJKText)
-    elemRulePreview.appendChild(elemLatinText)
+    const elemRuleDesc = document.createElement('div')
+    elemRuleDesc.className = 'rule__desc'
+    elemRuleDesc.textContent = `${rule.fonts[0].family} ${rule.fonts[0].style}, ${rule.fonts[1].family} ${rule.fonts[1].style}`
+
+    elemRuleThumb.appendChild(elemCJKText)
+    elemRuleThumb.appendChild(elemLatinText)
+    elemRulePreview.appendChild(elemRuleThumb)
+    elemRulePreview.appendChild(elemRuleDesc)
     elemRule.appendChild(elemRulePreview)
 
     const elemRuleRemove = document.createElement('a')
@@ -249,6 +292,12 @@ function createRuleBlock(rule) {
     elemRuleRemove.setAttribute('rule-id', rule.id)
     elemRuleRemove.title = 'Remove Rule'
     elemRule.appendChild(elemRuleRemove)
+
+    const elemRuleEdit = document.createElement('a')
+    elemRuleEdit.className = 'icon icon--edit'
+    elemRuleEdit.setAttribute('rule-id', rule.id)
+    elemRuleEdit.title = 'Edit Rule'
+    elemRule.appendChild(elemRuleEdit)
 
     elemRulePreview.onclick = function() {
         const pluginMessage = {

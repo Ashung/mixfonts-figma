@@ -170,8 +170,6 @@ window.onmessage = (event) => {
             elemDownload.download = 'mixfonts.json'
             elemDownload.href = URL.createObjectURL(blob)
             elemDownload.click()
-            document.body.removeChild(elemDownload)
-            // URL.revokeObjectURL(blob);
         }
 
         function reloadGroups() {

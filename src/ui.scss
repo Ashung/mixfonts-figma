@@ -21,6 +21,7 @@ body {
     height: 40px;
     padding: 4px 8px;
     display: flex;
+    flex-shrink: 0;
     .select-menu {
         flex: auto;
         width: auto;
@@ -67,7 +68,6 @@ body {
     height: 100%;
 }
 #rules {
-    display: flex;
     overflow: auto;
     flex-wrap: wrap;
     align-content: flex-start;

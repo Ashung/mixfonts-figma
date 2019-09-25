@@ -162,14 +162,18 @@ window.onmessage = (event) => {
         // Export
         const elemExport = document.getElementById('exportRules')
         elemExport.onclick = () => {
-            const blob = new Blob(
-                [JSON.stringify(mixFontRules)],
-                {type: 'text/plain;charset=utf-8'}
-            )
-            const elemDownload = document.createElement('a')
-            elemDownload.download = 'mixfonts.json'
-            elemDownload.href = URL.createObjectURL(blob)
-            elemDownload.click()
+            if (mixFontRules.length === 0) {
+                toast('No rule to export.')
+            } else {
+                const blob = new Blob(
+                    [JSON.stringify(mixFontRules)],
+                    {type: 'text/plain;charset=utf-8'}
+                )
+                const elemDownload = document.createElement('a')
+                elemDownload.download = 'mixfonts.json'
+                elemDownload.href = URL.createObjectURL(blob)
+                elemDownload.click()
+            }
         }
 
         function reloadGroups() {
@@ -189,7 +193,9 @@ window.onmessage = (event) => {
                 removeChildrenOfElement(elemRulesContainer)
                 const elemNotData = document.createElement('div')
                 elemNotData.className = 'type type--11-pos empty'
-                elemNotData.innerHTML = 'You don\'t have any mixfonts rule.<br/> Please click the <svg width="11" height="11" viewBox="0 0 11 11"><path d="M5 5V0H6V5H11V6H6V11H5V6H0V5H5Z" fill-opacity="0.8"/></svg> icon to add one.'
+                elemNotData.innerHTML = 'You don\'t have any mixfonts rule.<br/>' +
+                    'Please click <svg width="11" height="11" viewBox="0 0 11 11"><path d="M5 5V0H6V5H11V6H6V11H5V6H0V5H5Z" fill-opacity="0.8"/></svg> icon to add one,<br/>' +
+                    'or click <svg width="13px" height="14px" viewBox="0 0 13 14"><path d="M6,9.2929 L6,0 L7,0 L7,9.2929 L9.6464,6.6464 L10.3536,7.3536 L6.5,11.2071 L2.6464,7.3536 L3.3536,6.6464 L6,9.2929 Z M0,10 L1,10 L1,13 L12,13 L12,10 L13,10 L13,14 L0,14 L0,10 Z" fill-opacity="0.8"></path></svg> icon to import rules from JSON file.'
                 elemRulesContainer.appendChild(elemNotData)
             } else {
                 removeChildrenOfElement(elemRulesContainer)

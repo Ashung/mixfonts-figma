@@ -65,7 +65,7 @@ initData().then(data => {
         // pluginMessage.data: [{family, style}]
         if (pluginMessage.type === 'changeFont') {
             const fonts = pluginMessage.data
-            const selectedTextLayers = figma.currentPage.selection.filter(layer => layer.type === 'TEXT');
+            const selectedTextLayers = figma.currentPage.selection.filter(layer => layer.type === 'TEXT')
             if (selectedTextLayers.length === 0) {
                 figma.ui.postMessage({
                     type: 'showMessage',

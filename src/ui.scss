@@ -69,9 +69,6 @@ body {
 }
 #rules {
     overflow: auto;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    flex-direction: column;
 }
 .rule {
     display: flex;

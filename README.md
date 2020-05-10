@@ -6,14 +6,29 @@ A Figma plugin let you easy to use different fonts for Latin and CJK characters.
 
 ## Installation
 
-- Go to [Figma plugin page](https://www.figma.com/c) and search "MixFonts".
-- Download [master.zip](https://github.com/Ashung/mixfonts-figma/archive/master.zip), unzip, get the Figma desktop app and go to Menu > Plugins > Development > New Plugin...,  click file icon to choose the manifest.json file.
+https://www.figma.com/community/plugin/735711462872799891/MixFonts
+
+## Development
+
+1. Clone the repository.
+
+2. Install the dependencies.
+   ```bash
+   npm install
+   ```
+   
+3. Build plugin.
+   ```bash
+   npm run build
+   ```
+
+4. Open Figma desktop app, and go to ☰ > Plugins > More > Development > New Plugin..., then choose manifest.json.
 
 ## Import / Export Data
 
 Import MixFonts rules from JSON file, and export rules as JSON file for sharing.
 
-The fisrt item in `fonts` array is font for Latin characters, and the second item for CJK characters.
+The first item in `fonts` array is font for Latin characters, and the second item for CJK characters.
 
 ```json
 [

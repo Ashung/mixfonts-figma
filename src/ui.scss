@@ -77,6 +77,15 @@ body {
     flex-grow: inherit;
     height: 48px;
     align-items: center;
+    &.current::before {
+        content: "";
+        width: 4px;
+        height: 4px;
+        margin: 0 4px 0 -8px;
+        border-radius: 2px;
+        overflow: hidden;
+        background: $figma-blue;
+    }
     &:hover {
         background: $figma-selection-a;
     }
@@ -96,6 +105,7 @@ body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        letter-spacing: 0;
     }
 }
 
@@ -186,5 +196,21 @@ body {
     &--error {
         border: 1px solid $figma-red;
         background-color: $figma-red;
+    }
+}
+
+.text-update {
+    border-bottom: 1px solid $figma-black-1;
+    textarea {
+        width: calc(100% - 32px);
+        height: 3em;
+        min-height: 1em;
+        line-height: 1.5em;
+        padding: 16px;
+        box-sizing: content-box;
+        word-break: break-all;
+        resize: none;
+        border: none;
+        outline: none;
     }
 }

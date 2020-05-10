@@ -4,23 +4,45 @@ window.onmessage = (event) => {
 
     const pluginMessage = event.data.pluginMessage
 
-    if (pluginMessage.type === 'initData') {
-        let {mixFontGroups, mixFontCurrentGroup, mixFontRules, fontList} = pluginMessage.data
-        let currentEditedRuleId = document.getElementById('currentEditedRuleId')
+    const textUpdate = document.getElementById('textUpdate')
+    const elemGroup = document.getElementById('group')
+    const elemRulesContainer = document.getElementById('rules')
+    const elemList = document.getElementById('list')
+    const elemForm = document.getElementById('form')
+    const elemGroupTitle = document.getElementById('ruleGroup')
+    const elemLatinTextFamily = document.getElementById('ruleLatinFontFamily')
+    const elemLatinTextStyle = document.getElementById('ruleLatinFontStyle')
+    const elemCJKTextFamily = document.getElementById('ruleCJKFontFamily')
+    const elemCJKTextStyle = document.getElementById('ruleCJKFontStyle')
+    const elemAddRule = document.getElementById('addRule')
+    const elemCancelButton = document.getElementById('cancelButton')
+    const currentEditedRuleId = document.getElementById('currentEditedRuleId')
+    const elemSaveButton = document.getElementById('saveButton')
+    const elemImport = document.getElementById('importRules')
+    const elemExport = document.getElementById('exportRules')
 
-        const elemGroup = document.getElementById('group')
-        const elemRulesContainer = document.getElementById('rules')
+    if (pluginMessage.type === 'initData') {
+        const {
+            /** @type {string[]} */
+            mixFontGroups,
+            /** @type {string} */
+            mixFontCurrentGroup,
+            /** @type {{id :string, group :string, fonts :FontName[]}[} */
+            mixFontRules,
+            /** @type {{family :string, styles :string[]}[]} */
+            fontList,
+            /** @type {string} */
+            characters
+        } = pluginMessage.data
+
+        // console.log(mixFontRules)
+        // console.log(ruleId)
+
+        // Load rules
         reloadGroups()
         reloadRules()
     
-        const elemList = document.getElementById('list')
-        const elemForm = document.getElementById('form')
-        const elemGroupTitle = document.getElementById('ruleGroup')
-        const elemLatinTextFamily = document.getElementById('ruleLatinFontFamily')
-        const elemLatinTextStyle = document.getElementById('ruleLatinFontStyle')
-        const elemCJKTextFamily = document.getElementById('ruleCJKFontFamily')
-        const elemCJKTextStyle = document.getElementById('ruleCJKFontStyle')
-        
+        // Add rule from
         const fontFamilyNames = fontList.map(font => font.name)
         setOptionsToSelect(fontFamilyNames, elemLatinTextFamily)
         setOptionsToSelect(fontFamilyNames, elemCJKTextFamily)
@@ -33,8 +55,22 @@ window.onmessage = (event) => {
             setOptionsToSelect(fontList[this.value].styles, elemCJKTextStyle)
         }
 
+        // Characters update
+        textUpdate.value = characters || '';
+        textUpdate.disabled = characters ? false : true
+        textUpdate.focus()
+        textUpdate.setSelectionRange(textUpdate.value.length, textUpdate.value.length)
+        textUpdate.oninput = function() {
+            const pluginMessage = {
+                type: 'charactersUpdate',
+                data: {
+                    characters: this.value
+                }
+            }
+            window.parent.postMessage({pluginMessage}, '*')
+        };
+
         // Add rule
-        const elemAddRule = document.getElementById('addRule')
         elemAddRule.onclick = () => {
             elemList.style.left = '-100%'
             elemForm.style.left = '0'
@@ -54,14 +90,12 @@ window.onmessage = (event) => {
         }
 
         // Cancel
-        const elemCancelButton = document.getElementById('cancelButton')
         elemCancelButton.onclick = () => {
             elemList.style.left = '0'
             elemForm.style.left = '100%'
         }
 
         // Save
-        const elemSaveButton = document.getElementById('saveButton')
         elemSaveButton.onclick = function() {
 
             const group = elemGroupTitle.value
@@ -106,7 +140,6 @@ window.onmessage = (event) => {
         }
 
         // Import
-        const elemImport = document.getElementById('importRules')
         elemImport.onclick = () => {
             const fileInput = document.createElement('input')
             fileInput.type = 'file'
@@ -160,7 +193,6 @@ window.onmessage = (event) => {
         }
 
         // Export
-        const elemExport = document.getElementById('exportRules')
         elemExport.onclick = () => {
             if (mixFontRules.length === 0) {
                 toast('No rule to export.')
@@ -260,11 +292,20 @@ window.onmessage = (event) => {
         toast(pluginMessage.data, true)
     }
 
+    if (pluginMessage.type === 'selectionchange') {
+        const characters = pluginMessage.data.characters
+        textUpdate.value = characters || '';
+        textUpdate.disabled = characters ? false : true
+        textUpdate.focus()
+        textUpdate.setSelectionRange(textUpdate.value.length, textUpdate.value.length)
+    }
+
 }
 
 function createRuleBlock(rule) {
     const elemRule = document.createElement('div');
     elemRule.className = 'rule'
+    elemRule.setAttribute('rule-id', rule.id)
 
     const elemRulePreview = document.createElement('div')
     elemRulePreview.className = 'rule__preview'
@@ -306,7 +347,10 @@ function createRuleBlock(rule) {
     elemRulePreview.onclick = function() {
         const pluginMessage = {
             type: 'changeFont',
-            data: rule.fonts
+            data: {
+                id: rule.id,
+                fonts: rule.fonts
+            }
         }
         window.parent.postMessage({pluginMessage}, '*')
     }
@@ -377,13 +421,7 @@ function removeChildrenOfElement(elem) {
 }
 
 function generateHashID() {
-    const alphabet = '0123456789abcdef'
-    const length = 16
-    let result = ''
-    for (let i = 0; i < length; i++) {
-        result += alphabet.charAt(Math.floor(Math.random() * alphabet.length))
-    }
-    return result;
+    return Number(new Date()).toString(16);
 }
 
 function toast(message, error) {

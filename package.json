@@ -1,7 +1,7 @@
 {
   "name": "mixfonts",
   "version": "1.0.0",
-  "description": "A Figma plugin",
+  "description": "A Figma plugin let you easy to use different fonts for Latin and CJK characters.",
   "scripts": {
     "watch": "npx webpack --mode=development --watch",
     "publish": "npx webpack --mode=production"
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/Ashung/mixfonts-figma.git"
   },
-  "dependencies": {
+  "devDependencies": {
     "css-loader": "^3.4.2",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
@@ -20,6 +20,7 @@
     "sass-loader": "^7.3.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "@figma/plugin-typings": "^1.15.0"
   }
 }

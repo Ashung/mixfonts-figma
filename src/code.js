@@ -1,6 +1,5 @@
 /// <reference path="../node_modules/@figma/plugin-typings/index.d.ts" />
 
-
 async function initData() {
 
     // await figma.clientStorage.setAsync('mixFontRules', null)
@@ -107,7 +106,7 @@ initData().then(data => {
                     })
                 } else {
                     // https://en.wikipedia.org/wiki/Latin_script_in_Unicode
-                    const regexLatin = /[\u0000-\u1EFF\u2070-\u218F\u2C60-\u2C7F\uA720–\uA7FF\uAB30–\uAB6F\uFB00–\uFB4F\uFF00–\uFFEF]+/g
+                    const regexLatin = /[\u0000-\u1EFF\u2070-\u218F\u2C60-\u2C7F\uA720–\uA7FF\uAB30–\uAB6F\uFB00–\uFB4F\uFF00–\uFFEF\u1F00-\u2E7F]+/g
                     Promise.all(fonts.map(font => figma.loadFontAsync(font))).then(() => {
                         selectedTextLayers.forEach(layer => {
                             const text = layer.characters

@@ -22,7 +22,7 @@ window.onmessage = (event) => {
     const elemExport = document.getElementById('exportRules')
 
     if (pluginMessage.type === 'initData') {
-        const {
+        let {
             /** @type {string[]} */
             mixFontGroups,
             /** @type {string} */
@@ -97,7 +97,6 @@ window.onmessage = (event) => {
 
         // Save
         elemSaveButton.onclick = function() {
-
             const group = elemGroupTitle.value
             let fonts = []
             fonts.push({
